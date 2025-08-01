@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import useProducts from "../hook/useProducts";
 import img from "../assets/image 1.png";
 
@@ -30,20 +31,23 @@ function AllProducts() {
           Order it for you or for your beloved ones
         </p>
 
-        <div className="flex flex-col items-center justify-center md:flex-row md:flex-wrap gap-4 p-4">
+        <div className="flex flex-col items-center justify-center md:flex-row md:flex-wrap space-y-[20px] md:space-y-0 gap-[30px] my-[75px] md:mb-[120px]">
           {visibleProducts.map((product) => (
-            <div
+            <Link
+              to={`/product/${product.id}`}
               key={product.id}
-              className="border p-4 rounded shadow w-[250px] text-center"
+              className="p-3 rounded shadow-xl"
             >
               <img
                 src={img}
                 alt={product.title}
-                className="w-full h-[200px] object-cover mb-2"
+                className="w-full bg-[#F7F8FA] object-cover mb-2"
               />
-              <p className="text-xl font-semibold">{product.title}</p>
-              <p className="text-lg text-green-700">${product.price}</p>
-            </div>
+              <div className="flex justify-between">
+                <p className="text-[16px] font-medium mt-[7px]">{product.title}</p>
+                <p className="text-[17px] text-green-700 mt-[23px]">${product.price}</p>
+              </div>
+            </Link>
           ))}
 
           {/* Show button only on mobile and when not showing all */}
@@ -51,7 +55,7 @@ function AllProducts() {
             <div className="text-center mt-4">
               <button
                 onClick={() => setShowAll(true)}
-                className="bg-green-600 text-white px-4 py-2 rounded"
+                className="bg-green-700 text-[20.65px] text-white px-[44px] py-[8px] rounded font-semibold transition mt-5"
               >
                 See More
               </button>
