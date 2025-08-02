@@ -36,7 +36,7 @@ export default function Navbar() {
                   <span className="">
                     <HiMiniChevronDown />
                   </span>
-                  <span className="ms-1  dark:text-white"> Discovery</span>
+                  <span className="ms-1 "> Discovery</span>
                 </a>
                 <a className="ms-6" href="#">
                   About

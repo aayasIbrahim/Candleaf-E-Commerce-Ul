@@ -55,7 +55,7 @@ function AllProducts() {
             <div className="text-center mt-4">
               <button
                 onClick={() => setShowAll(true)}
-                className="bg-green-700 text-[20.65px] text-white px-[44px] py-[8px] rounded font-semibold transition mt-5"
+                className="bg-green-700 cursor-pointer text-[20.65px] text-white px-[44px] py-[8px] rounded font-semibold transition mt-5"
               >
                 See More
               </button>
