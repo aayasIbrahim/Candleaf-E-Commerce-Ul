@@ -1,5 +1,4 @@
-import useProducts from "../hook/useProducts";
-import img from "../assets/image 1.png";
+import useProducts from "../../hook/useProducts";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards, Autoplay } from "swiper/modules";
@@ -9,7 +8,6 @@ import "swiper/css/effect-cards";
 function PopularProducts() {
   const { products } = useProducts();
   const popularproducts = products?.slice(-6);
-  console.log(popularproducts);
 
   return (
     <section>
@@ -42,11 +40,11 @@ function PopularProducts() {
                   className="block rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 "
                 >
                   <img
-                    src={img} // তুমি চাইলে product.image দিতে পারো
+                    src={product.img}
                     alt={product.title}
                     className="w-full bg-gray-200 object-cover"
                   />
-                  <div className="px-4 py-3 flex justify-between items-center bg-green-400">
+                  <div className="px-4 py-3 flex justify-between items-center bg-green-700">
                     <p className="text-white text-lg font-semibold truncate max-w-[65%]">
                       {product.title}
                     </p>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { HiMiniChevronDown } from "react-icons/hi2";
 import { AiOutlineMenu } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
@@ -44,6 +45,9 @@ export default function Navbar() {
                 <a href="#" className="ms-6">
                   Contact us
                 </a>
+                <Link to="addproduct" href="#" className="ms-6">
+                  Add product
+                </Link>
               </div>
             </div>
           )}
@@ -68,9 +72,9 @@ export default function Navbar() {
             <a href="#" className="">
               Contact us
             </a>
-            <a href="#" className="">
-              Add Products
-            </a>
+            <Link to="addproduct" className="">
+              Add Product
+            </Link>
           </div>
         </div>
 

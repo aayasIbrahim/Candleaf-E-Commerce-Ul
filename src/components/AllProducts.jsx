@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useProducts from "../hook/useProducts";
-import img from "../assets/image 1.png";
+// import img from "../assets/image 1.png";
 
 function AllProducts() {
   const { products, loading, error } = useProducts();
+  console.log(products)
 
   const [showAll, setShowAll] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -49,9 +50,9 @@ function AllProducts() {
               className="p-3 rounded shadow-xl"
             >
               <img
-                src={img}
+                src={product.img}
                 alt={product.title}
-                className="w-full bg-[#F7F8FA] object-cover mb-2"
+                className="w-[251px] h-[210px] bg-[#F7F8FA] object-cover mb-2"
               />
               <div className="flex justify-between">
                 <p className="text-[16px] font-medium mt-[7px]">
