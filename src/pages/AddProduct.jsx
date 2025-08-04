@@ -11,7 +11,6 @@ export default function AddProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!image) {
       setMessage("Give Me Image Url");
       return;

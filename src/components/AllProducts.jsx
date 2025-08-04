@@ -5,7 +5,7 @@ import useProducts from "../hook/useProducts";
 
 function AllProducts() {
   const { products, loading, error } = useProducts();
-  console.log(products)
+  console.log(products);
 
   const [showAll, setShowAll] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
