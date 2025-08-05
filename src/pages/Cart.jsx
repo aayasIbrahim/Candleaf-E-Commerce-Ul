@@ -1,10 +1,10 @@
-import useProductId from "../../hook/useProductId";
+import useProductId from "../hook/useProductId";
 import { useParams } from "react-router-dom";
 import { BsCart3 } from "react-icons/bs";
-import { addToCart, increment, decrement } from "../../features/cart/cartSlice";
+import { addToCart, increment, decrement } from "../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-function ProductDetails() {
+function Cart() {
   const { id } = useParams();
   const product = useProductId(id);
   const navigate = useNavigate();
@@ -93,7 +93,7 @@ function ProductDetails() {
                 <span>+ Add to Cart</span>
               </button>
               <button
-                onClick={() => navigate("/")}
+                onClick={() => navigate(`/product/checkout/${product?.id}`)}
                 className="w-full bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg flex justify-center items-center gap-3 transition"
               >
                 <span>Check Out</span>
@@ -144,4 +144,4 @@ function ProductDetails() {
   );
 }
 
-export default ProductDetails;
+export default Cart;

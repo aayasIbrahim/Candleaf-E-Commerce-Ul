@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import useProducts from "../hook/useProducts";
 // import img from "../assets/image 1.png";
 
-function AllProducts() {
+function ProductList() {
   const { products, loading, error } = useProducts();
   console.log(products);
 
@@ -82,4 +82,4 @@ function AllProducts() {
   );
 }
 
-export default AllProducts;
+export default ProductList;
