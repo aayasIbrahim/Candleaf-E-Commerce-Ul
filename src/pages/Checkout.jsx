@@ -1,22 +1,23 @@
-import { Link, useParams } from "react-router-dom";
-import useProductId from "../hook/useProductId";
+import { Link } from "react-router-dom";
 import { increment, decrement } from "../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
+
 function Checkout() {
-  const { id } = useParams();
-  const product = useProductId(id);
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
 
-  const productInCart = cartItems.find((item) => item.id == product?.id);
-
-  const handleIncrement = () => {
-    dispatch(increment(product?.id));
+  const handleIncrement = (id) => {
+    dispatch(increment(id));
   };
 
-  const handleDecrement = () => {
-    dispatch(decrement(product?.id));
+  const handleDecrement = (id) => {
+    dispatch(decrement(id));
   };
+
+  const totalAmount = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   return (
     <section>
@@ -43,66 +44,72 @@ function Checkout() {
           <p className="col-span-1 text-right me-5">Action</p>
         </div>
 
-        {/* Cart Item */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center py-6  border-none md:border-b mb-4">
-          {/* Image & Title */}
-          <div className="col-span-2 flex items-center gap-4">
-            <img
-              src={product?.img}
-              alt={product?.title}
-              className="w-[93.54px] h-[76px]   md:w-20 md:h-16 object-cover"
-            />
-            <p className="font-bold me-5">{product?.title}</p>
-          </div>
+        {/* Loop through Cart Items */}
+        {cartItems.map((item) => (
+          <div
+            key={item.id}
+            className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center py-6 border-none md:border-b mb-4"
+          >
+            {/* Image & Title */}
+            <div className="col-span-2 flex items-center gap-4">
+              <img
+                src={item.img}
+                alt={item.title}
+                className="w-[93.54px] h-[76px] md:w-20 md:h-16 object-cover"
+              />
+              <p className="font-bold me-5">{item.title}</p>
+            </div>
 
-          {/* Price */}
-          <div className="col-span-1">
-            <p className="text-gray-800">Price:{product?.price}$</p>
-          </div>
+            {/* Price */}
+            <div className="col-span-1">
+              <p className="text-gray-800">Price: {item.price}$</p>
+            </div>
 
-          {/* Quantity */}
-
-          {productInCart && (
+            {/* Quantity Controls */}
             <div className="flex flex-col items-center pe-2">
               <p className="text-[16px] font-medium">Quantity</p>
               <div className="w-[90px] h-[35px] mt-2 flex items-center justify-between px-3 border border-green-500 rounded">
                 <button
-                  onClick={handleIncrement}
+                  onClick={() => handleIncrement(item.id)}
                   className="text-green-500 text-lg font-bold"
                 >
                   +
                 </button>
-                <span className="font-medium">{productInCart?.quantity}</span>
+                <span className="font-medium">{item.quantity}</span>
                 <button
-                  onClick={handleDecrement}
+                  onClick={() => handleDecrement(item.id)}
                   className="text-green-500 text-lg font-bold"
                 >
                   -
                 </button>
               </div>
             </div>
-          )}
 
-          {/* Subtotal */}
-          <div className="col-span-1 text-right">
-            <p className="text-gray-800 font-medium">
-              {"Sub-Total : "}
-              {productInCart
-                ? `${Number(product?.price * productInCart?.quantity)}$`
-                : `${Number(product?.price)}$`}
-            </p>
-          </div>
+            {/* Subtotal */}
+            <div className="col-span-1 text-right">
+              <p className="text-gray-800 font-medium">
+                Sub-Total: {item.price * item.quantity}$
+              </p>
+            </div>
 
-          {/* Remove */}
-          <div className="col-span-1 text-right p-4">
-            <Link
-              to={`/`}
-              className="text-red-500 underline hover:text-green-500 cursor-pointer"
-            >
-              Remove
-            </Link>
+            {/* Remove */}
+            <div className="col-span-1 text-right p-4">
+              <Link
+                to={`/`}
+                className="text-red-500 underline hover:text-green-500 cursor-pointer"
+              >
+                Remove
+              </Link>
+            </div>
           </div>
+        ))}
+
+        {/* Total */}
+        <div className="text-right mt-6 font-bold text-xl">
+          Total: {totalAmount}$
         </div>
+
+        {/* Checkout Button */}
         <button className="w-full md:w-1/2 md:mx-auto bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg flex justify-center items-center gap-3 transition my-6">
           <span>Check Out</span>
         </button>

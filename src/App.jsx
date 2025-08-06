@@ -5,7 +5,7 @@ import Home from "./pages/Home.jsx";
 import AddProduct from "./pages/AddProduct.jsx";
 import "./App.css";
 import Cart from "./pages/Cart.jsx";
-import Checkout from "./pages/Checkout.jsx";
+import Checkout from "./pages/Checkout.jsx"
 
 const App = () => {
   return (
