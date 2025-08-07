@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+
 // doc: ডকুমেন্ট reference তৈরি করতে
 
 // setDoc: নতুন ডাটা লিখতে
@@ -12,6 +14,7 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 // getDoc: ইউজারের role read করতে
 
 export default function AuthForm() {
+  const navigate = useNavigate();
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +35,7 @@ export default function AuthForm() {
         );
         await setDoc(doc(db, "users", userCredential.user.uid), {
           email,
-          role: "admin", // or "user"
+          role: "user",
         });
         alert("Account created successfully!");
       } else {
@@ -40,19 +43,23 @@ export default function AuthForm() {
           auth,
           email,
           password
+        
         );
 
         const docSnap = await getDoc(doc(db, "users", userCredential.user.uid));
         if (docSnap.exists()) {
           const userData = docSnap.data();
           if (userData.role === "admin") {
-            alert("Welcome Admin!");
+            // alert("Welcome user!");
+            navigate("/admin")
+          
             // Navigate to admin dashboard
-          } else {
-            alert("Welcome User!");
-            // Navigate to user dashboard
+          }else{
+             navigate("/")
+            
           }
         }
+        console.log("user")
       }
     } catch (err) {
       setError(err.message);
@@ -62,7 +69,7 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-200 px-4">
+    <div className="min-h-screen flex items-center justify-center  bg-gray-400 px-4">
       <div className="w-full max-w-md bg-white shadow-lg  rounded-lg p-8 space-y-6">
         <h2 className="text-3xl font-bold text-center text-gray-800">
           {isRegistering ? "Create an Account" : "Login to Your Account"}
