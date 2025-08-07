@@ -5,26 +5,26 @@ import useProducts from "../hook/useProducts";
 
 function ProductList() {
   const { products, loading, error } = useProducts();
-  console.log(products);
+  // console.log(products);
 
   const [showAll, setShowAll] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const toggleShow = () => setShowAll((prev) => !prev);
 
-  // Detect window size change
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
-
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // যদি মোবাইল ভিউ হয় এবং showAll false থাকে তাহলে ৪ টা দেখাবে
+  // Soft delete excluded
+  const filteredProducts = products.filter(product => !product.deleted);
+
   const visibleProducts =
-    isMobile && !showAll ? products.slice(0, 4) : products;
+    isMobile && !showAll ? filteredProducts.slice(0, 4) : filteredProducts;
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (error)
@@ -65,7 +65,6 @@ function ProductList() {
             </Link>
           ))}
 
-          {/* Show toggle button only on mobile */}
           {isMobile && (
             <div className="text-center mt-4">
               <button
@@ -81,5 +80,6 @@ function ProductList() {
     </section>
   );
 }
+
 
 export default ProductList;

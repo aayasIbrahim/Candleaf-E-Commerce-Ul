@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { increment, decrement } from "../features/cart/cartSlice";
+import { increment, decrement,removeFromCart } from "../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function Checkout() {
@@ -13,6 +13,14 @@ function Checkout() {
   const handleDecrement = (id) => {
     dispatch(decrement(id));
   };
+
+  // const handleClearCart = () => {
+  //   dispatch(clearCart());
+  // };
+
+  const handleremovFromCart=(id)=>{
+    dispatch(removeFromCart(id))
+  }
 
   const totalAmount = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -44,7 +52,7 @@ function Checkout() {
           <p className="col-span-1 text-right me-5">Action</p>
         </div>
 
-        {/* Loop through Cart Items */}
+        {/* Cart Items */}
         {cartItems.map((item) => (
           <div
             key={item.id}
@@ -65,7 +73,7 @@ function Checkout() {
               <p className="text-gray-800">Price: {item.price}$</p>
             </div>
 
-            {/* Quantity Controls */}
+            {/* Quantity */}
             <div className="flex flex-col items-center pe-2">
               <p className="text-[16px] font-medium">Quantity</p>
               <div className="w-[90px] h-[35px] mt-2 flex items-center justify-between px-3 border border-green-500 rounded">
@@ -94,23 +102,26 @@ function Checkout() {
 
             {/* Remove */}
             <div className="col-span-1 text-right p-4">
-              <Link
-                to={`/`}
+              <button
+                onClick={()=>handleremovFromCart(item.id)}
                 className="text-red-500 underline hover:text-green-500 cursor-pointer"
               >
                 Remove
-              </Link>
+              </button>
             </div>
           </div>
         ))}
 
-        {/* Total */}
+        {/* Total Amount */}
         <div className="text-right mt-6 font-bold text-xl">
           Total: {totalAmount}$
         </div>
 
         {/* Checkout Button */}
-        <button className="w-full md:w-1/2 md:mx-auto bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg flex justify-center items-center gap-3 transition my-6">
+        <button
+        
+          className="w-full md:w-1/2 md:mx-auto bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg flex justify-center items-center gap-3 transition my-6"
+        >
           <span>Check Out</span>
         </button>
       </div>

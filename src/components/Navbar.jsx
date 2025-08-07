@@ -1,12 +1,23 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { HiMiniChevronDown } from "react-icons/hi2";
 import { AiOutlineMenu } from "react-icons/ai";
 import { RxCross1 } from "react-icons/rx";
 import { VscAccount } from "react-icons/vsc";
 import { BsCart3 } from "react-icons/bs";
-import logo from "../assets/logo.png"
+import logo from "../assets/logo.png";
+import { useSelector } from "react-redux";
+
 export default function Navbar() {
+  const navigate=useNavigate()
+  const cartItem = useSelector((state) => state.cart.cartItems);
+  const totalQuantity = cartItem.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+  console.log(totalQuantity);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <nav className="w-full px-4 md:px-[30px] py-4  shadow-sm text-white ">
@@ -45,15 +56,15 @@ export default function Navbar() {
                 <a href="#" className="ms-6">
                   Contact us
                 </a>
-                <Link to="addproduct" href="#" className="ms-6">
-                  Add product
+                <Link to="admin" href="#" className="ms-6">
+                  Admin
                 </Link>
               </div>
             </div>
           )}
           {/* Logo for desktop */}
           <div className="hidden md:block">
-          <img src={logo} alt="Logo" className="h-[34px] w-[126px]" />
+            <img src={logo} alt="Logo" className="h-[34px] w-[126px]" />
           </div>
         </div>
 
@@ -72,8 +83,8 @@ export default function Navbar() {
             <a href="#" className="">
               Contact us
             </a>
-            <Link to="addproduct" className="">
-              Add Product
+            <Link to="admin" className="">
+              Admin
             </Link>
           </div>
         </div>
@@ -85,13 +96,16 @@ export default function Navbar() {
 
         {/* Right Side */}
         <div className=" md:gap-[20px]  flex justify-end items-center gap-4 ">
-        
-
-          <button>
+          <button onClick={()=>navigate("login")}>
             <VscAccount size={25} color="black" />
           </button>
-          <button>
+          <button className="relative">
             <BsCart3 size={25} color="black" />
+            {totalQuantity > 0 && (
+              <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold px-[6px] py-[1px] rounded-full">
+                {totalQuantity}
+              </span>
+            )}
           </button>
         </div>
       </div>

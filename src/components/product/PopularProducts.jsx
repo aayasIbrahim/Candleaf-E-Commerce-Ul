@@ -7,13 +7,19 @@ import "swiper/css/effect-cards";
 
 function PopularProducts() {
   const { products } = useProducts();
-  const popularproducts = products?.slice(-6);
+
+  // deleted: true থাকলে সেই প্রোডাক্ট বাদ দেওয়া হচ্ছে
+  const filteredProducts = products.filter((product) => !product.deleted);
+  // ekne product property deleted jodi ture hoi logically ore false dia array theke falai dicche
+
+  
+  const popularproducts = filteredProducts.slice(-6);
 
   return (
     <section>
       <div className="max-w-7xl mx-auto">
-        <div className=" text-center  pt-[90px] ">
-          <h2 className="font-medium text-[40px] leading-[56.6px] tracking-[0.9px] mb-2 text-center">
+        <div className="text-center pt-[90px]">
+          <h2 className="font-medium text-[40px] leading-[56.6px] tracking-[0.9px] mb-2">
             Popular
           </h2>
           <p className="font-[16px] leading-[22.8px] text-gray-600 pb-[40px] md:mt-[15px]">
@@ -37,12 +43,12 @@ function PopularProducts() {
               <SwiperSlide key={product.id}>
                 <Link
                   to={`/product/popular/${product.id}`}
-                  className="block rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 "
+                  className="block rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                 >
                   <img
                     src={product.img}
                     alt={product.title}
-                    className="w-full bg-gray-200 object-cover"
+                    className="w-full h-[250px] object-cover bg-gray-200"
                   />
                   <div className="px-4 py-3 flex justify-between items-center bg-green-700">
                     <p className="text-white text-lg font-semibold truncate max-w-[65%]">
