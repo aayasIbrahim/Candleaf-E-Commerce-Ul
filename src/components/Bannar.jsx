@@ -13,7 +13,7 @@ function Bannar() {
         <img
           src={DestopIMG}
           alt="Desktop Banner"
-          className="hidden md:block w-full h-[750px] object-cover"
+          className="hidden  md:block w-full h-[750px] object-cover"
         />
 
         {/* Mobile Image */}

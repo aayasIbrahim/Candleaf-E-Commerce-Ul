@@ -31,7 +31,7 @@ function Cart() {
 
   return (
     <section>
-      <div className="max-w-7xl mx-auto px-4 lg:px-10 py-8">
+      <div className="max-w-7xl mx-auto px-4 lg:px-10 py-8 ">
         {/* Title */}
         <h2 className="text-2xl lg:text-4xl font-semibold text-center lg:text-left lg:ms-[90px] mb-6 ">
           {product?.title}

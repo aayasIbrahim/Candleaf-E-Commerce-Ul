@@ -12,6 +12,6 @@ export default async function DeleteProduct(id, onSuccess) {
     onSuccess("Deleted!");
   } catch (error) {
     console.error("Error deleting product:", error);
-    onSuccess("❌ প্রোডাক্ট ডিলিট ব্যর্থ হয়েছে।");
+    onSuccess("Product can't br delete");
   }
 }

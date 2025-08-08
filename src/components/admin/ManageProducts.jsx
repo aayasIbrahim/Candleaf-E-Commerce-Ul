@@ -1,15 +1,13 @@
 import { useState } from "react";
 
-import FetchProducts from "../../hook/productmange/FetchProducts";
-import DeleteProduct from "../../hook/productmange/DeleteProduct";
-import UpdateProduct from "../../hook/productmange/UpdateProduct";
-// crud fuction 
+import FetchProducts from "../../utils/productmange/FetchProducts";
+import DeleteProduct from "../../utils/productmange/DeleteProduct";
+import UpdateProduct from "../../utils/productmange/UpdateProduct";
 import ProductCard from "./ProductCard";
 
 function ManageProducts() {
   const { products, loading, fetchProducts } = FetchProducts();
   const [message, setMessage] = useState("");
-  
 
   const handleDelete = async (id) => {
     await DeleteProduct(id, (msg) => {
@@ -18,29 +16,44 @@ function ManageProducts() {
     });
   };
 
- const handleUpdate = async (product) => {
-  const newTitle = prompt("Please give a new name", product.title);
+  const handleUpdate = async (product) => {
+    const newTitle = prompt("Please give a new title", product.title);
+    if (newTitle === null) {
+      setMessage("Update cancelled.");
+      return;
+    }
 
-  // যদি ইউজার cancel বা খালি ইনপুট দেয়, তাহলে কিছু না করেই return
-  if (!newTitle || newTitle.trim() === "") {
-    setMessage("Please Set Update Name");
-    return;
-  }
+    const newPrice = prompt("Please give a new price", product.price);
+    if (newPrice === null) {
+      setMessage("Update cancelled.");
+      return;
+    }
 
-  const updated = {
-    ...product,
-    title: newTitle.trim(), // বাড়তি স্পেস কেটে দিচ্ছি
+    if (!newTitle.trim()) {
+      setMessage("Please provide a valid title");
+      return;
+    }
+
+    const priceValue = parseFloat(newPrice);
+    if (isNaN(priceValue) || priceValue <= 0) {
+      setMessage("Please provide a valid positive price");
+      return;
+    }
+
+    const updated = {
+      ...product,
+      title: newTitle.trim(),
+      price: priceValue,
+    };
+
+    await UpdateProduct(product.id, updated, (msg) => {
+      setMessage(msg);
+      fetchProducts();
+    });
   };
 
-  await UpdateProduct(product.id, updated, (msg) => {
-    setMessage(msg);
-    fetchProducts();
-  });
-};
-
-
   return (
-    <div className="max-w-4xl mx-auto mt-10 px-4 py-10">
+    <div className="max-w-4xl  mx-auto mt-10 px-4 py-10">
       <h2 className="text-2xl font-bold text-center mb-6">📦 All Products</h2>
       {message && <p className="text-center mb-4 text-green-600">{message}</p>}
       {loading ? (

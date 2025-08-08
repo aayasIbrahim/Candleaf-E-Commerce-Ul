@@ -8,16 +8,17 @@ import { VscAccount } from "react-icons/vsc";
 import { BsCart3 } from "react-icons/bs";
 import logo from "../assets/logo.png";
 import { useSelector } from "react-redux";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const cartItem = useSelector((state) => state.cart.cartItems);
   const totalQuantity = cartItem.reduce(
     (total, item) => total + item.quantity,
     0
   );
-  console.log(totalQuantity);
-
+  const { user, isAuthenticated, isAdmin, isUser, loading, logout } = useAuth();
+  console.log(user, isAuthenticated, isUser, isAdmin, loading, logout);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <nav className="w-full px-4 md:px-[30px] py-4  shadow-sm text-white ">
@@ -96,7 +97,7 @@ export default function Navbar() {
 
         {/* Right Side */}
         <div className=" md:gap-[20px]  flex justify-end items-center gap-4 ">
-          <button onClick={()=>navigate("login")}>
+          <button onClick={() => navigate("login")}>
             <VscAccount size={25} color="black" />
           </button>
           <button className="relative">
