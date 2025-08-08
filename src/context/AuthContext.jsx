@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../firebase/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 
 const AuthContext = createContext();
 
@@ -39,6 +39,14 @@ export function AuthProvider({ children }) {
 
   const logout = () => signOut(auth);
 
+  /*
+  isAuthenticated হচ্ছে true/false ভ্যালু, যা নির্ধারণ করে
+  user অবজেক্ট আছে কিনা।
+  '!!' ব্যবহার করে user কে Boolean এ কনভার্ট করা হয়।
+  উদাহরণ:
+    - user = null  → isAuthenticated = false
+    - user = {}    → isAuthenticated = true
+*/
   const isAuthenticated = !!user;
   const isAdmin = user?.role === "admin";
   const isUser = user?.role === "user";
