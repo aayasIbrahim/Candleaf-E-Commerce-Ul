@@ -1,29 +1,28 @@
 import { useState } from "react";
-import { db } from '../../firebase/firebase';
+import { db } from "../../firebase/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 function Addproduct() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [img, setImg] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!img) {
-      setMessage("Give Me Image Url");
+      toast.error("Give Me Image Url");
       return;
     }
 
     const numericPrice = parseFloat(price);
     if (isNaN(numericPrice) || numericPrice <= 0) {
-      setMessage("Please Give me Valid Price");
+      toast.error("Please Give me Valid Price");
       return;
     }
 
     setLoading(true);
-    setMessage("");
 
     try {
       // ✅ Save to Firestore with 'deleted: false' for soft delete support
@@ -35,13 +34,13 @@ function Addproduct() {
         createdAt: serverTimestamp(),
       });
 
-      setMessage("✅ Product Add Successful");
+      toast.success(" Product Add Successful");
       setTitle("");
       setPrice("");
       setImg("");
     } catch (error) {
       console.error("Add product error:", error);
-      setMessage(" Product does not add");
+      toast.error(" Product does not add");
     } finally {
       setLoading(false);
     }
@@ -50,14 +49,10 @@ function Addproduct() {
   return (
     <div className="max-w-lg mx-auto mt-10 px-4">
       <h2 className="text-xl font-bold text-center mb-5">Add New Product</h2>
-      {message && (
-        <p className="text-center mb-4 text-sm font-medium text-red-600">
-          {message}
-        </p>
-      )}
+
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 bg-white p-6 shadow-lg rounded-lg mb-[50px]"
+        className="space-y-4 bg-white px-6 p-6 shadow-xl rounded-xl mb-[50px]"
       >
         <input
           type="text"

@@ -4,8 +4,10 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import PropTypes from "prop-types";
 
+// Create Auth Context
 const AuthContext = createContext();
 
+// Provider component
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null); // { uid, email, role }
   const [loading, setLoading] = useState(true);
@@ -14,39 +16,36 @@ export function AuthProvider({ children }) {
     // Listen for auth state changes
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // Get user role from Firestore
-        const docSnap = await getDoc(doc(db, "users", firebaseUser.uid));
-        if (docSnap.exists()) {
-          setUser({
-            uid: firebaseUser.uid,
-            email: firebaseUser.email,
-            role: docSnap.data().role,
-          });
-        } else {
-          setUser({
-            uid: firebaseUser.uid,
-            email: firebaseUser.email,
-            role: "user", // fallback
-          });
+        try {
+          // Get user role from Firestore
+          const docSnap = await getDoc(doc(db, "users", firebaseUser.uid));
+          if (docSnap.exists()) {
+            setUser({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email,
+              role: docSnap.data().role,
+            });
+          } else {
+            setUser({
+              uid: firebaseUser.uid,
+              email: firebaseUser.email,
+              role: "user", // fallback role
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
         }
       } else {
         setUser(null);
       }
       setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
   const logout = () => signOut(auth);
 
-  /*
-  isAuthenticated হচ্ছে true/false ভ্যালু, যা নির্ধারণ করে
-  user অবজেক্ট আছে কিনা।
-  '!!' ব্যবহার করে user কে Boolean এ কনভার্ট করা হয়।
-  উদাহরণ:
-    - user = null  → isAuthenticated = false
-    - user = {}    → isAuthenticated = true
-*/
   const isAuthenticated = !!user;
   const isAdmin = user?.role === "admin";
   const isUser = user?.role === "user";
@@ -67,9 +66,11 @@ export function AuthProvider({ children }) {
   );
 }
 
-export const useAuth = () => {
+// Custom hook for using Auth context
+export function useAuth() {
   return useContext(AuthContext);
-};
+}
+
 AuthProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

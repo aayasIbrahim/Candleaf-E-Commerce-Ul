@@ -1,17 +1,17 @@
-import { useState } from "react";
 
 import FetchProducts from "../../utils/productmange/FetchProducts";
 import DeleteProduct from "../../utils/productmange/DeleteProduct";
 import UpdateProduct from "../../utils/productmange/UpdateProduct";
 import ProductCard from "./ProductCard";
+import { toast } from "react-toastify";
 
 function ManageProducts() {
   const { products, loading, fetchProducts } = FetchProducts();
-  const [message, setMessage] = useState("");
+  
 
   const handleDelete = async (id) => {
     await DeleteProduct(id, (msg) => {
-      setMessage(msg);
+      toast.success(msg);
       fetchProducts();
     });
   };
@@ -19,24 +19,24 @@ function ManageProducts() {
   const handleUpdate = async (product) => {
     const newTitle = prompt("Please give a new title", product.title);
     if (newTitle === null) {
-      setMessage("Update cancelled.");
+      toast.info("Update cancelled.");
       return;
     }
 
     const newPrice = prompt("Please give a new price", product.price);
     if (newPrice === null) {
-      setMessage("Update cancelled.");
+      toast.info("Update cancelled.");
       return;
     }
 
     if (!newTitle.trim()) {
-      setMessage("Please provide a valid title");
+      toast.error("Please provide a valid title");
       return;
     }
 
     const priceValue = parseFloat(newPrice);
     if (isNaN(priceValue) || priceValue <= 0) {
-      setMessage("Please provide a valid positive price");
+      toast.error("Please provide a valid positive price");
       return;
     }
 
@@ -47,7 +47,7 @@ function ManageProducts() {
     };
 
     await UpdateProduct(product.id, updated, (msg) => {
-      setMessage(msg);
+      toast.success(msg);
       fetchProducts();
     });
   };
@@ -55,11 +55,10 @@ function ManageProducts() {
   return (
     <div className="max-w-4xl  mx-auto mt-10 px-4 py-10">
       <h2 className="text-2xl font-bold text-center mb-6">📦 All Products</h2>
-      {message && <p className="text-center mb-4 text-green-600">{message}</p>}
       {loading ? (
         <p className="text-center">Loading...</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-3">
           {products.map((product) => (
             <ProductCard
               key={product.id}

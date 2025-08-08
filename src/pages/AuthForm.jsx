@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase/firebase";
 import {
@@ -37,32 +38,31 @@ export default function AuthForm() {
           email,
           role: "user",
         });
-        alert("Account created successfully!");
+        toast.success("Account created successfully!");
       } else {
         const userCredential = await signInWithEmailAndPassword(
           auth,
           email,
           password
-        
         );
 
         const docSnap = await getDoc(doc(db, "users", userCredential.user.uid));
         if (docSnap.exists()) {
           const userData = docSnap.data();
           if (userData.role === "admin") {
-            // alert("Welcome user!");
-            navigate("/admin")
-          
+            toast.success("Welcome Admin!");
+            navigate("/admin");
+
             // Navigate to admin dashboard
-          }else{
-             navigate("/")
-            
+          } else {
+            toast.success("Login success")
+            navigate("/");
           }
         }
-        console.log("user")
+        console.log("user");
       }
     } catch (err) {
-      setError(err.message);
+      toast.error(err.message)
     } finally {
       setLoading(false);
     }
@@ -95,14 +95,19 @@ export default function AuthForm() {
           />
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded transition duration-300"
-          >
-            {loading ? "Processing..." : isRegistering ? "Register" : "Login"}
-          </button>
+          {loading ? (
+            <p className="text-green-600 text-center font-semibold">
+              Processing...
+            </p>
+          ) : (
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded transition duration-300"
+            >
+              {isRegistering ? "Register" : "Login"}
+            </button>
+          )}
         </form>
 
         <p className="text-center text-sm text-gray-600">

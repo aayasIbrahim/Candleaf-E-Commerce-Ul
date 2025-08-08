@@ -1,10 +1,6 @@
-// React এর useState hook – state manage করার জন্য
+
 import { useState } from "react";
-
-// React Router এর Link – page reload ছাড়া navigation এর জন্য
 import { Link } from "react-router-dom";
-
-// useNavigate – programmatically অন্য পেজে পাঠানোর জন্য
 import { useNavigate } from "react-router-dom";
 
 import { HiMiniChevronDown } from "react-icons/hi2";
@@ -25,10 +21,13 @@ export default function Navbar() {
     (total, item) => total + item.quantity,
     0
   );
+  
 
   // Auth Context থেকে ডেটা আনা
   const { user, isAuthenticated, isAdmin, isUser, loading, logout } = useAuth();
   console.log(user, isAuthenticated, isUser, isAdmin, loading, logout);
+  console.log(`Admin is`, isAdmin);
+  console.log(`User is`, isUser);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -68,9 +67,11 @@ export default function Navbar() {
                 <a href="#" className="ms-6">
                   Contact us
                 </a>
-                <Link to="admin" className="ms-6">
-                  Admin
-                </Link>
+                {isAdmin && (
+                  <Link to="admin" className="ms-6">
+                    Admin
+                  </Link>
+                )}
               </div>
             </div>
           )}
@@ -90,7 +91,7 @@ export default function Navbar() {
             </a>
             <a href="#">About</a>
             <a href="#">Contact us</a>
-            <Link to="admin">Admin</Link>
+            {isAdmin && <Link to="admin">Admin</Link>}
           </div>
         </div>
 
@@ -105,7 +106,7 @@ export default function Navbar() {
             <>
               <button
                 onClick={logout}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-1.5 rounded transition-all duration-300 shadow-md hover:shadow-lg"
+                className="bg-green-600 hover:bg-red-600  text-white px-4 py-1.5 rounded transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 Logout
               </button>

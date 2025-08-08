@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 
 function ProductCard({ product, onDelete, onUpdate }) {
   return (
-    <div className="border rounded p-4 shadow hover:shadow-md">
+    <div className="shadow-md rounded-lg p-4 bg-gray-200 hover:shadow-lg">
       <img
         src={product.img}
         alt={product.title}
@@ -13,7 +13,7 @@ function ProductCard({ product, onDelete, onUpdate }) {
       <div className="flex gap-2">
         <button
           onClick={() => onUpdate(product)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full"
         >
           Update
         </button>

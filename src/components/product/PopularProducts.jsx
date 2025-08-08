@@ -1,4 +1,5 @@
-import useProducts from "../../hook/useProducts";
+
+import FetchProducts from "../../utils/productmange/FetchProducts";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards, Autoplay } from "swiper/modules";
@@ -6,14 +7,8 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 
 function PopularProducts() {
-  const { products } = useProducts();
-
-  // deleted: true থাকলে সেই প্রোডাক্ট বাদ দেওয়া হচ্ছে
-  const filteredProducts = products.filter((product) => !product.deleted);
-  // ekne product property deleted jodi ture hoi logically ore false dia array theke falai dicche
-
-  
-  const popularproducts = filteredProducts.slice(-6);
+  const { products } = FetchProducts();
+  const popularproducts = products.slice(-6);
 
   return (
     <section>

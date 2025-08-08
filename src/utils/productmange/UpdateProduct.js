@@ -5,8 +5,7 @@ export default async function useUpdateProduct(id, updatedData, onSuccess) {
   try {
     await updateDoc(doc(db, "products", id), updatedData);
     onSuccess("Product Update!");
-  } catch (error) {
-    console.error("Error updating product:", error);
+  } catch {
     onSuccess("Product don't update");
   }
 }

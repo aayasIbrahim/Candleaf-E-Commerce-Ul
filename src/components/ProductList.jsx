@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import useProducts from "../hook/useProducts";
-// import img from "../assets/image 1.png";
+import FetchProducts from "../utils/productmange/FetchProducts";
+
 
 function ProductList() {
-  const { products, loading, error } = useProducts();
+  const { products, loading, error } = FetchProducts();
   // console.log(products);
 
   const [showAll, setShowAll] = useState(false);
@@ -19,13 +19,8 @@ function ProductList() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  // Soft delete excluded
-  const filteredProducts = products.filter(product => !product.deleted);
-
   const visibleProducts =
-    isMobile && !showAll ? filteredProducts.slice(0, 4) : filteredProducts;
-
+    isMobile && !showAll ? products.slice(0, 4) : products;
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (error)
     return (
