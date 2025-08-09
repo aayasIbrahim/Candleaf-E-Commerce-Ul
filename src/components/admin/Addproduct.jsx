@@ -1,18 +1,62 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { db } from "../../firebase/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { toast } from "react-toastify";
+import { FiUploadCloud } from "react-icons/fi";
+import { MdClose } from "react-icons/md";
 
 function Addproduct() {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [img, setImg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imgLoading, setImgLoading] = useState(false);
+  const fileInputRef = useRef(null);
 
+  // Handle image upload to Cloudinary
+  const handleUploadImg = async (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      toast.error("No file selected");
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    setImgLoading(true);
+    try {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "candyleaf_preset");  // Replace with your Cloudinary preset
+      data.append("cloud_name", "dexe6nhmm"); // Replace with your Cloudinary cloud name
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dexe6nhmm/image/upload", // Cloudinary upload URL
+        {
+          method: "POST",
+          body: data,// Send the form data
+        }
+      );
+      const fileUrl = await res.json();// Parse the response
+      if (fileUrl.secure_url) {
+        setImg(fileUrl.secure_url);// Set the image URL
+        toast.success("Image uploaded!");
+      } else {
+        throw new Error("Image upload failed");
+      }
+    } catch {
+      toast.error("Image upload failed");
+      setImg("");
+    } finally {
+      setImgLoading(false);
+    }
+  };
+
+  // Handle form submit to Firestore
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!img) {
-      toast.error("Give Me Image Url");
+      toast.error("Please Upload Image");
       return;
     }
 
@@ -25,66 +69,121 @@ function Addproduct() {
     setLoading(true);
 
     try {
-      // ✅ Save to Firestore with 'deleted: false' for soft delete support
       await addDoc(collection(db, "products"), {
         title,
         price: numericPrice,
         img,
-        deleted: false, // <--- This is  soft delete for using which not deleted to data  base and but client section deleted
+        deleted: false,
         createdAt: serverTimestamp(),
       });
 
-      toast.success(" Product Add Successful");
+      toast.success("Product Add Successful");
       setTitle("");
       setPrice("");
       setImg("");
     } catch (error) {
       console.error("Add product error:", error);
-      toast.error(" Product does not add");
+      toast.error("Product does not add");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 px-4">
-      <h2 className="text-xl font-bold text-center mb-5">Add New Product</h2>
-
+    <div className="max-w-lg mx-auto mt-10 px-4  py-6 r">
+      <h2 className="text-2xl text-green-600 font-bold text-center mb-7 tracking-wide">
+        Add New Product
+      </h2>
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 bg-white px-6 p-6 shadow-xl rounded-xl mb-[50px]"
+        className="space-y-6  px-8 py-8 shadow-2xl rounded-xl bg-white"
       >
-        <input
-          type="text"
-          placeholder="Product Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="border rounded p-3 w-full"
-          required
-        />
-        <input
-          type="number"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          className="border rounded p-3 w-full"
-          required
-        />
-        <input
-          type="text"
-          placeholder="Image URL ('https://i.pravatar.cc/150?img=4')"
-          value={img}
-          onChange={(e) => setImg(e.target.value)}
-          className="border rounded p-2 w-full bg-gray-50"
-        />
+        {/* Product Title Input */}
+        <div>
+          <label className="block text-gray-700 font-semibold mb-2">
+            Product Title
+          </label>
+          <input
+            type="text"
+            placeholder="Product Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-green-400 outline-none transition"
+            required
+          />
+        </div>
+        {/* Product Price Input */}
+        <div>
+          <label className="block text-gray-700 font-semibold mb-2">
+            Price
+          </label>
+          <input
+            type="number"
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            className="border border-gray-300 rounded-lg p-3 w-full focus:ring-2 focus:ring-green-400 outline-none transition"
+            required
+          />
+        </div>
+        {/* Image Upload Input */}
+        <div>
+          <label className="block text-gray-700 font-semibold mb-2">
+            Product Image
+          </label>
+          <div className="flex flex-col items-center">
+            {!img ? (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleUploadImg}
+                  ref={fileInputRef}
+                  className="hidden"
+                  disabled={imgLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current.click()}
+                  disabled={imgLoading}
+                  className={`flex items-center gap-2 px-5 py-2 rounded-lg border-2 border-dashed border-green-400 text-green-700 bg-green-50 hover:bg-green-100 transition font-medium shadow-sm ${
+                    imgLoading ? "opacity-60 cursor-not-allowed" : ""
+                  }`}
+                >
+                  <FiUploadCloud size={22} />
+                  {imgLoading ? "Uploading..." : "Upload Image"}
+                </button>
+              </>
+            ) : (
+              <div className="relative group">
+                <img
+                  src={img}
+                  alt="Preview"
+                  className="w-32 h-32 object-cover rounded-lg border-2 border-green-400 shadow mb-2"
+                />
+                <button
+                  type="button"
+                  onClick={() => setImg("")}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow hover:bg-red-600 transition opacity-80 group-hover:opacity-100"
+                  title="Remove image"
+                >
+                  <MdClose size={18} />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+        {/* Submit Button */}
         <button
           type="submit"
-          disabled={loading}
-          className={`w-full py-3 rounded text-white font-semibold ${
-            loading ? "bg-gray-400" : "bg-green-600 hover:bg-green-700"
+          disabled={loading || imgLoading}
+          className={`w-full py-3 rounded-lg text-white font-semibold text-lg shadow-md transition ${
+            loading || imgLoading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-700"
           }`}
         >
-          {loading ? "Uploading..." : "Add Product"}
+          {loading ? "Adding Product..." : "Add Product"}
         </button>
       </form>
     </div>
