@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import FetchProducts from "../utils/productmange/FetchProducts";
-
+import { useGetProductsQuery } from "../features/firebaseApi/firebaseApiSlice";
 
 function ProductList() {
-  const { products, loading, error } = FetchProducts();
-  // console.log(products);
+  // Fetch products using RTK Query
+  const { data: products, isLoading: loading, error } = useGetProductsQuery();
+  
 
   const [showAll, setShowAll] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -20,7 +20,7 @@ function ProductList() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   const visibleProducts =
-    isMobile && !showAll ? products.slice(0, 4) : products;
+    isMobile && !showAll ? (products || []).slice(0, 4) : (products||[]); // fallback to empty array if products is undefined it aslo define product?.slice(0, 4)
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (error)
     return (
@@ -75,6 +75,5 @@ function ProductList() {
     </section>
   );
 }
-
 
 export default ProductList;

@@ -1,5 +1,6 @@
 
-import FetchProducts from "../../utils/productmange/FetchProducts";
+// import FetchProducts from "../../utils/productmange/FetchProducts";
+import { useGetProductsQuery } from "../../features/firebaseApi/firebaseApiSlice";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCards, Autoplay } from "swiper/modules";
@@ -7,8 +8,10 @@ import "swiper/css";
 import "swiper/css/effect-cards";
 
 function PopularProducts() {
-  const { products } = FetchProducts();
-  const popularproducts = products.slice(-6);
+  const { data: products } = useGetProductsQuery();
+
+  const popularproducts = products?.slice(-6);
+  console.log(popularproducts);
 
   return (
     <section>
@@ -34,7 +37,7 @@ function PopularProducts() {
             speed={1500}
             className="w-[350px] md:w-[400px] rounded-lg shadow-lg bg-white"
           >
-            {popularproducts.map((product) => (
+            {popularproducts?.map((product) => (
               <SwiperSlide key={product.id}>
                 <Link
                   to={`/product/popular/${product.id}`}

@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
-
+import { useGetProductsQuery } from "../../features/firebaseApi/firebaseApiSlice";
 function ProductCard({ product, onDelete, onUpdate }) {
+  const { data: products } = useGetProductsQuery();
+  console.log("ProductCard products:", products);
   return (
     <div className="shadow-md rounded-lg p-4 bg-gray-200 hover:shadow-lg">
       <img

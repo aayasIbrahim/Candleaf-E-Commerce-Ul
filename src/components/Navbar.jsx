@@ -10,7 +10,9 @@ import logo from "../assets/logo.png";
 import { useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
 
+
 export default function Navbar() {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   // Redux or store js থেকে cart items আনা
@@ -23,12 +25,11 @@ export default function Navbar() {
   
 
   // Auth Context থেকে ডেটা আনা
-  const { user, isAuthenticated, isAdmin, isUser, loading, logout } = useAuth();
-  console.log(user, isAuthenticated, isUser, isAdmin, loading, logout);
-  console.log(`Admin is`, isAdmin);
-  console.log(`User is`, isUser);
+  const {  isAuthenticated, isAdmin,  logout } = useAuth();
+  
+//  if (loading) return null; // If loading, return null to avoid rendering
+//  if(isUser) return toast.success("Welcome User!");
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <nav className="w-full px-4 md:px-[30px] py-4 shadow-sm text-white">

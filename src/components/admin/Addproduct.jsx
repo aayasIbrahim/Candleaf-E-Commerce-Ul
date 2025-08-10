@@ -1,9 +1,8 @@
 import { useState, useRef } from "react";
-import { db } from "../../firebase/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { FiUploadCloud } from "react-icons/fi";
 import { MdClose } from "react-icons/md";
+import { useAddProductMutation } from "../../features/firebaseApi/firebaseApiSlice";
 
 function Addproduct() {
   const [title, setTitle] = useState("");
@@ -12,6 +11,7 @@ function Addproduct() {
   const [loading, setLoading] = useState(false);
   const [imgLoading, setImgLoading] = useState(false);
   const fileInputRef = useRef(null);
+  const [addProduct, { isLoading: apiLoading }] = useAddProductMutation();
 
   // Handle image upload to Cloudinary
   const handleUploadImg = async (e) => {
@@ -28,18 +28,18 @@ function Addproduct() {
     try {
       const data = new FormData();
       data.append("file", file);
-      data.append("upload_preset", "candyleaf_preset");  // Replace with your Cloudinary preset
-      data.append("cloud_name", "dexe6nhmm"); // Replace with your Cloudinary cloud name
+      data.append("upload_preset", "candyleaf_preset");
+      data.append("cloud_name", "dexe6nhmm");
       const res = await fetch(
-        "https://api.cloudinary.com/v1_1/dexe6nhmm/image/upload", // Cloudinary upload URL
+        "https://api.cloudinary.com/v1_1/dexe6nhmm/image/upload",
         {
           method: "POST",
-          body: data,// Send the form data
+          body: data,
         }
       );
-      const fileUrl = await res.json();// Parse the response
+      const fileUrl = await res.json();
       if (fileUrl.secure_url) {
-        setImg(fileUrl.secure_url);// Set the image URL
+        setImg(fileUrl.secure_url);
         toast.success("Image uploaded!");
       } else {
         throw new Error("Image upload failed");
@@ -52,7 +52,7 @@ function Addproduct() {
     }
   };
 
-  // Handle form submit to Firestore
+  // Handle form submit to Firestore via RTK Query
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!img) {
@@ -69,13 +69,13 @@ function Addproduct() {
     setLoading(true);
 
     try {
-      await addDoc(collection(db, "products"), {
+      await addProduct({
         title,
         price: numericPrice,
         img,
         deleted: false,
-        createdAt: serverTimestamp(),
-      });
+        createdAt: new Date().toISOString(),
+      }).unwrap();
 
       toast.success("Product Add Successful");
       setTitle("");
@@ -90,13 +90,13 @@ function Addproduct() {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 px-4  py-6 r">
+    <div className="max-w-lg mx-auto mt-10 px-4 py-6">
       <h2 className="text-2xl text-green-600 font-bold text-center mb-7 tracking-wide">
         Add New Product
       </h2>
       <form
         onSubmit={handleSubmit}
-        className="space-y-6  px-8 py-8 shadow-2xl rounded-xl bg-white"
+        className="space-y-6 px-8 py-8 shadow-2xl rounded-xl bg-white"
       >
         {/* Product Title Input */}
         <div>
@@ -176,14 +176,14 @@ function Addproduct() {
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={loading || imgLoading}
+          disabled={loading || imgLoading || apiLoading}
           className={`w-full py-3 rounded-lg text-white font-semibold text-lg shadow-md transition ${
-            loading || imgLoading
+            loading || imgLoading || apiLoading
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-green-600 hover:bg-green-700"
           }`}
         >
-          {loading ? "Adding Product..." : "Add Product"}
+          {loading || apiLoading ? "Adding Product..." : "Add Product"}
         </button>
       </form>
     </div>

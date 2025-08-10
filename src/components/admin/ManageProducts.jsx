@@ -1,22 +1,22 @@
-
-import FetchProducts from "../../utils/productmange/FetchProducts";
-import DeleteProduct from "../../utils/productmange/DeleteProduct";
-import UpdateProduct from "../../utils/productmange/UpdateProduct";
-import ProductCard from "./ProductCard";
+import { useGetProductsQuery, useUpdateProductMutation, useSoftDeleteProductMutation } from "../../features/firebaseApi/firebaseApiSlice";
 import { toast } from "react-toastify";
 
 function ManageProducts() {
-  const { products, loading, fetchProducts } = FetchProducts();
-  
+  const { data: products, isLoading } = useGetProductsQuery();
+  const [updateProduct] = useUpdateProductMutation();
+  const [softDeleteProduct] = useSoftDeleteProductMutation();
 
   const handleDelete = async (id) => {
-    await DeleteProduct(id, (msg) => {
-      toast.success(msg);
-      fetchProducts();
-    });
+    try {
+      await softDeleteProduct(id).unwrap();
+      toast.success("Product deleted!");
+    } catch {
+      toast.error("Delete failed!");
+    }
   };
 
   const handleUpdate = async (product) => {
+    console.log("Update clicked"); // Debugging log
     const newTitle = prompt("Please give a new title", product.title);
     if (newTitle === null) {
       toast.info("Update cancelled.");
@@ -41,32 +41,61 @@ function ManageProducts() {
     }
 
     const updated = {
-      ...product,
       title: newTitle.trim(),
       price: priceValue,
     };
 
-    await UpdateProduct(product.id, updated, (msg) => {
-      toast.success(msg);
-      fetchProducts();
-    });
+    try {
+      await updateProduct({ id: product.id, updatedProduct: updated }).unwrap();
+      toast.success("Product updated!");
+    } catch {
+      toast.error("Update failed!");
+    }
   };
 
   return (
-    <div className="max-w-4xl  mx-auto mt-10 px-4 py-10">
+    <div className="max-w-4xl mx-auto mt-10 px-4 py-10">
       <h2 className="text-2xl font-bold text-center mb-6">📦 All Products</h2>
-      {loading ? (
-        <p className="text-center">Loading...</p>
+      {isLoading ? (
+        <h2 className="text-center">loading</h2>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-3">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onDelete={handleDelete}
-              onUpdate={handleUpdate}
-            />
-          ))}
+          {products && products.length > 0 ? (
+            products.map((product) => (
+              <div
+                key={product.id}
+                className="shadow-md rounded-lg p-4 bg-gray-200 hover:shadow-lg"
+              >
+                <img
+                  src={product.img}
+                  alt={product.title}
+                  className="w-full h-[200px] object-cover mb-4 rounded"
+                />
+                <h3 className="text-lg font-semibold mb-2">
+                  {product.title}
+                </h3>
+                <p className="text-green-600 text-xl mb-4">
+                  ${Number(product.price).toFixed(2)}
+                </p>
+                <div className="flex justify-between">
+                  <button
+                    onClick={() => handleUpdate(product)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                  >
+                    Update
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product.id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center col-span-3">No products found.</p>
+          )}
         </div>
       )}
     </div>

@@ -1,12 +1,14 @@
-import useProductId from "../hook/useProductId";
+// import useProductId from "../hook/useProductId";
 import { useParams } from "react-router-dom";
 import { BsCart3 } from "react-icons/bs";
 import { addToCart, increment, decrement } from "../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useGetProductByIdQuery } from "../features/firebaseApi/firebaseApiSlice";
 function Cart() {
   const { id } = useParams();
-  const product = useProductId(id);
+  const { data: product } = useGetProductByIdQuery(id);
+  console.log("this is product", product,"this is id",id);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -18,7 +20,6 @@ function Cart() {
     if (!productInCart) {
       dispatch(addToCart(product));
     }
-    //  navigate("/")// Redirect to Checkout page
   };
 
   const handleIncrement = () => {
@@ -93,7 +94,7 @@ function Cart() {
                 <span>+ Add to Cart</span>
               </button>
               <button
-                onClick={() => navigate(`/product/checkout/${product?.id}`)}
+                onClick={() => navigate(`/product/checkout`)}
                 className="w-full bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg flex justify-center items-center gap-3 transition"
               >
                 <span>Check Out</span>
