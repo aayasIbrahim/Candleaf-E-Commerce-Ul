@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useGetProductByIdQuery } from "../features/firebaseApi/firebaseApiSlice";
 function Cart() {
   const { id } = useParams();
-  const { data: product } = useGetProductByIdQuery(id);
-  console.log("this is product", product,"this is id",id);
+  const { data: product,isLoading:loading } = useGetProductByIdQuery(id);
+  
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -41,7 +41,9 @@ function Cart() {
         {/* Desktop Grid */}
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Product Image */}
+          
           <div className="flex-1 flex justify-center">
+          
             <img
               src={product?.img}
               alt={product?.title}
@@ -54,7 +56,7 @@ function Cart() {
             {/* Price and Quantity */}
             <div className="flex justify-between items-center mb-6">
               <h4 className="text-green-600 text-2xl lg:text-3xl font-bold">
-                {productInCart
+                {loading? `...`:productInCart
                   ? `${Number(product?.price * productInCart?.quantity)}$`
                   : `${Number(product?.price)}$`}
                 {/* ternary oparator korchi bcz initally NaN dakaitache ..databse theke string hisbe ashe number ta */}
@@ -97,7 +99,8 @@ function Cart() {
                 onClick={() => navigate(`/product/checkout`)}
                 className="w-full bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg flex justify-center items-center gap-3 transition"
               >
-                <span>Check Out</span>
+                     <BsCart3 />
+                <span>See Cart List</span>
               </button>
             </div>
 

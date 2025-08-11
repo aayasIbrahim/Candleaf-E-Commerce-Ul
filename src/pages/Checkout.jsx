@@ -1,26 +1,18 @@
 import { Link } from "react-router-dom";
-import { increment, decrement,removeFromCart } from "../features/cart/cartSlice";
+import {
+  increment,
+  decrement,
+  removeFromCart,
+} from "../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 
-function Checkout() {
+function CartList() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
 
-  const handleIncrement = (id) => {
-    dispatch(increment(id));
-  };
-
-  const handleDecrement = (id) => {
-    dispatch(decrement(id));
-  };
-
-  // const handleClearCart = () => {
-  //   dispatch(clearCart());
-  // };
-
-  const handleremovFromCart=(id)=>{
-    dispatch(removeFromCart(id))
-  }
+  const handleIncrement = (id) => dispatch(increment(id));
+  const handleDecrement = (id) => dispatch(decrement(id));
+  const handleRemoveFromCart = (id) => dispatch(removeFromCart(id));
 
   const totalAmount = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -28,105 +20,105 @@ function Checkout() {
   );
 
   return (
-    <section>
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+    <section className="min-h-screen   px-6 py-10 md:p-6">
+      <div className="max-w-4xl mx-auto  rounded-lg shadow-lg ">
         {/* Header */}
-        <div className="text-center mt-10">
-          <h2 className="font-semibold text-2xl md:text-3xl mb-2">
-            Your Cart Items
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 px-4">
+          <h2 className="font-bold mt-2 text-2xl md:text-3xl text-green-700 mb-2 md:mb-0">
+            🛒 Your Cart
           </h2>
           <Link
             to="/"
-            className="text-green-600 underline hover:text-red-500 text-sm"
+            className="text-green-600 underline hover:text-green-800 text-sm"
           >
-            Back to shopping
+            ← Back to shopping
           </Link>
         </div>
 
-        {/* Table Head */}
-        <div className="hidden md:grid grid-cols-6 gap-4 text-gray-700 font-semibold text-left py-4 border-b mt-12">
-          <p className="col-span-2">Product</p>
-          <p className="col-span-1">Price</p>
-          <p className="col-span-1 text-center">Quantity</p>
-          <p className="col-span-1 text-right">Subtotal</p>
-          <p className="col-span-1 text-right me-5">Action</p>
-        </div>
+        {/* Empty Cart */}
+        {cartItems.length === 0 && (
+          <div className="text-center text-green-700 py-16">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png"
+              alt="Empty Cart"
+              className="mx-auto w-24 mb-4 opacity-70"
+            />
+            <p className="text-lg font-semibold">Your cart is empty!</p>
+          </div>
+        )}
 
         {/* Cart Items */}
-        {cartItems.map((item) => (
-          <div
-            key={item.id}
-            className="grid grid-cols-1 md:grid-cols-6 gap-4 items-center py-6 border-none md:border-b mb-4"
-          >
-            {/* Image & Title */}
-            <div className="col-span-2 flex items-center gap-4">
-              <img
-                src={item.img}
-                alt={item.title}
-                className="w-[93.54px] h-[76px] md:w-20 md:h-16 object-cover"
-              />
-              <p className="font-bold me-5">{item.title}</p>
-            </div>
-
-            {/* Price */}
-            <div className="col-span-1">
-              <p className="text-gray-800">Price: {item.price}$</p>
-            </div>
-
-            {/* Quantity */}
-            <div className="flex flex-col items-center pe-2">
-              <p className="text-[16px] font-medium">Quantity</p>
-              <div className="w-[90px] h-[35px] mt-2 flex items-center justify-between px-3 border border-green-500 rounded">
+        <div className="space-y-6 px-4">
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              className="flex flex-col md:flex-row items-center gap-4 bg-gray-100 rounded-lg shadow p-4 "
+            >
+              {/* Image & Title */}
+              <div className="flex items-center gap-4 flex-1">
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  className="w-20 h-16 object-cover rounded-lg border"
+                />
+                <div>
+                  <p className="font-semibold text-lg">{item.title}</p>
+                  <p className="text-gray-600 text-sm">Price: ${item.price}</p>
+                </div>
+              </div>
+              {/* Quantity Controls */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleDecrement(item.id)}
+                  className="bg-green-200 text-green-700 px-2 py-1 rounded hover:bg-green-300 font-bold text-lg"
+                  aria-label="Decrease quantity"
+                >
+                  −
+                </button>
+                <span className="font-semibold text-lg px-2">{item.quantity}</span>
                 <button
                   onClick={() => handleIncrement(item.id)}
-                  className="text-green-500 text-lg font-bold"
+                  className="bg-green-200 text-green-700 px-2 py-1 rounded hover:bg-green-300 font-bold text-lg"
+                  aria-label="Increase quantity"
                 >
                   +
                 </button>
-                <span className="font-medium">{item.quantity}</span>
-                <button
-                  onClick={() => handleDecrement(item.id)}
-                  className="text-green-500 text-lg font-bold"
-                >
-                  -
-                </button>
               </div>
-            </div>
-
-            {/* Subtotal */}
-            <div className="col-span-1 text-right">
-              <p className="text-gray-800 font-medium">
-                Sub-Total: {item.price * item.quantity}$
-              </p>
-            </div>
-
-            {/* Remove */}
-            <div className="col-span-1 text-right p-4">
+              {/* Subtotal */}
+              <div className="font-semibold text-green-700 flex-1 text-right">
+                ${(item.price * item.quantity).toFixed(2)}
+              </div>
+              {/* Remove */}
               <button
-                onClick={()=>handleremovFromCart(item.id)}
-                className="text-red-500 underline hover:text-green-500 cursor-pointer"
+                onClick={() => handleRemoveFromCart(item.id)}
+                className="text-red-500 hover:text-red-700 font-semibold ml-2"
+                aria-label="Remove from cart"
               >
                 Remove
               </button>
             </div>
-          </div>
-        ))}
-
-        {/* Total Amount */}
-        <div className="text-right mt-6 font-bold text-xl">
-          Total: {totalAmount}$
+          ))}
         </div>
 
-        {/* Checkout Button */}
-        <button
-        
-          className="w-full md:w-1/2 md:mx-auto bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg flex justify-center items-center gap-3 transition my-6"
-        >
-          <span>Check Out</span>
-        </button>
+        {/* Total & Checkout */}
+        {cartItems.length > 0 && (
+          <div className="mt-10">
+            <div className="flex justify-between items-center mb-6">
+              <span className="text-xl font-bold text-gray-700">Total:</span>
+              <span className="text-2xl font-bold text-green-700">
+                ${totalAmount.toFixed(2)}
+              </span>
+            </div>
+            <button
+              className="w-full bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg font-semibold transition"
+            >
+              Proceed to Checkout
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
 }
 
-export default Checkout;
+export default CartList;

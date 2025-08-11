@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useGetProductsQuery } from "../features/firebaseApi/firebaseApiSlice";
+import LoadingSpinner from "./LoadingSpinner";
 
 function ProductList() {
   // Fetch products using RTK Query
@@ -21,7 +22,6 @@ function ProductList() {
   }, []);
   const visibleProducts =
     isMobile && !showAll ? (products || []).slice(0, 4) : (products||[]); // fallback to empty array if products is undefined it aslo define product?.slice(0, 4)
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (error)
     return (
       <p className="text-center mt-10 text-red-500">Error loading products</p>
@@ -38,6 +38,7 @@ function ProductList() {
         </p>
 
         <div className="flex flex-col items-center justify-center md:flex-row md:flex-wrap space-y-[20px] md:space-y-0 gap-[30px] my-[75px] md:mb-[120px]">
+          {loading && <LoadingSpinner/>}
           {visibleProducts.map((product) => (
             <Link
               to={`/product/${product.id}`}
