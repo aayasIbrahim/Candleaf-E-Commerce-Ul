@@ -8,13 +8,14 @@ import {
   getDoc,
   updateDoc,
   where,
+  deleteDoc,
 } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 
 export const firebaseApiSlice = createApi({
   reducerPath: "firebaseApi",
   baseQuery: fakeBaseQuery(),
-  tagTypes: ["products"],
+  tagTypes: ["products", "contracts"],
   endpoints: (builder) => ({
     addProduct: builder.mutation({
       async queryFn(product) {
@@ -89,6 +90,49 @@ export const firebaseApiSlice = createApi({
       },
       invalidatesTags: ["products"],
     }),
+    addFormData: builder.mutation({
+      async queryFn(contractData) {
+        try {
+          const docRef = await addDoc(collection(db, "contracts"), {
+            ...contractData,
+            createdAt: new Date().toISOString(),
+          });
+          return { data: { ...contractData, id: docRef.id } };
+        } catch (error) {
+          console.error("Error adding document to Firestore: ", error);
+          return { error: { message: "Failed to add document" } };
+        }
+      },
+      invalidatesTags: ["contracts"],
+    }),
+    getFormData: builder.query({
+      async queryFn() {
+        try {
+          const contractsCollection = collection(db, "contracts");
+          const snapshot = await getDocs(contractsCollection);
+          const contracts = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          return { data: contracts };
+        } catch (error) {
+          console.error("Error fetching contracts: ", error);
+          return { error: { message: "Failed to fetch contracts" } };
+        }
+      },
+      providesTags: ["contracts"],
+    }),
+    deleteFormdata: builder.mutation({
+      async queryFn(id) {
+        try {
+          await deleteDoc(doc(db, "contracts", id));
+          return { data: "Deleted" };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: ["contracts"], // ✅ chhoto 'c'
+    }),
   }),
 });
 
@@ -98,4 +142,7 @@ export const {
   useGetProductByIdQuery,
   useSoftDeleteProductMutation,
   useUpdateProductMutation,
+  useAddFormDataMutation,
+  useGetFormDataQuery,
+  useDeleteFormdataMutation
 } = firebaseApiSlice;

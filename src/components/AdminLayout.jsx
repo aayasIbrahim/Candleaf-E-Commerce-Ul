@@ -29,13 +29,13 @@ export default function AdminLayout() {
           onClick={() => navigate("/admin/user")}
           className={getButtonClasses("/admin/user")}
         >
-          User
+          Users
         </button>
         <button
-          onClick={() => navigate("/admin/contract")}
-          className={getButtonClasses("/admin/contract")}
+          onClick={() => navigate("/admin/contractt")}
+          className={getButtonClasses("/admin/contractt")}
         >
-          Contract
+          Contract-List
         </button>
       </div>
 

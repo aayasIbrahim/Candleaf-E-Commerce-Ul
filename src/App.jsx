@@ -12,6 +12,7 @@ import Contract from "./pages/Contract.jsx";
 import AdminLayout from "./components/AdminLayout.jsx";
 import ProductMangement from "./components/ProductMangement.jsx";
 import User from "./components/User.jsx";
+import GetContract from "./components/admin/Getcontract.jsx";
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<ProductMangement />} />
               <Route path="user"element={<User />} />
+              <Route path="contractt" element={<GetContract />} />
               {/* admin এর nested routes এ দিন */}
             </Route>
           </Route>

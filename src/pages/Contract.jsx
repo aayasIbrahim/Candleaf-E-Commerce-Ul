@@ -1,8 +1,9 @@
-import { db } from "../firebase/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useAddFormDataMutation } from "../features/firebaseApi/firebaseApiSlice";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Contract() {
+  const [addFormData] = useAddFormDataMutation();
   const [productId, setProductId] = useState("");
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
@@ -18,17 +19,17 @@ export default function Contract() {
 
     setLoading(true);
     try {
-      await addDoc(collection(db, "contracts"), {
+      await addFormData({
         productId,
         productName,
         price: Number(price),
         buyerId,
         sellerId,
         status: "pending",
-        createdAt: serverTimestamp(),
+        createdAt: new Date().toISOString(),
         notes: "",
       });
-      alert("Contract successfully created!");
+      toast.success("Contract successfully created!");
       setProductId("");
       setProductName("");
       setPrice("");
@@ -36,11 +37,19 @@ export default function Contract() {
       setSellerId("");
     } catch (error) {
       console.error("Error creating contract:", error);
-      alert("Failed to create contract, please try again.");
+      toast.error("Failed to create contract, please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  const fields = [
+    { id: "productId", label: "Product ID", value: productId, setter: setProductId, placeholder: "Enter product ID" },
+    { id: "productName", label: "Product Name", value: productName, setter: setProductName, placeholder: "Enter product name" },
+    { id: "price", label: "Price", value: price, setter: setPrice, placeholder: "Enter price", type: "number" },
+    { id: "buyerId", label: "Buyer ID", value: buyerId, setter: setBuyerId, placeholder: "Enter buyer's user ID" },
+    { id: "sellerId", label: "Seller ID", value: sellerId, setter: setSellerId, placeholder: "Enter seller's user ID" }
+  ];
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
@@ -60,21 +69,16 @@ export default function Contract() {
           className="space-y-5"
           noValidate
         >
-          {[
-            { label: "Product ID", value: productId, setter: setProductId, placeholder: "Enter product ID" },
-            { label: "Product Name", value: productName, setter: setProductName, placeholder: "Enter product name" },
-            { label: "Price", value: price, setter: setPrice, placeholder: "Enter price", type: "number" },
-            { label: "Buyer ID", value: buyerId, setter: setBuyerId, placeholder: "Enter buyer's user ID" },
-            { label: "Seller ID", value: sellerId, setter: setSellerId, placeholder: "Enter seller's user ID" }
-          ].map(({ label, value, setter, placeholder, type = "text" }) => (
-            <div key={label}>
-              <label className="block text-gray-700 font-semibold mb-2">{label}</label>
+          {fields.map(({ id, label, value, setter, placeholder, type = "text" }) => (
+            <div key={id}>
+              <label htmlFor={id} className="block text-gray-700 font-semibold mb-2">{label}</label>
               <input
+                id={id}
                 type={type}
                 value={value}
                 onChange={(e) => setter(e.target.value)}
                 placeholder={placeholder}
-                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+                className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
                 required
               />
             </div>
@@ -85,8 +89,8 @@ export default function Contract() {
             disabled={loading}
             className={`w-full py-3 rounded-lg text-lg font-semibold text-white shadow-md transition-transform transform ${
               loading
-                ? "bg-indigo-400 cursor-not-allowed"
-                : "bg-indigo-600 hover:bg-indigo-700 hover:scale-105"
+                ? "bg-green-400 cursor-not-allowed"
+                : "bg-green-600 hover:bg-green-700 hover:scale-105"
             }`}
           >
             {loading ? "Creating..." : "Create Contract"}
