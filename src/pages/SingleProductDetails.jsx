@@ -5,7 +5,7 @@ import { addToCart, increment, decrement } from "../features/cart/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useGetProductByIdQuery } from "../features/firebaseApi/firebaseApiSlice";
-function Cart() {
+function SingleProductDetails() {
   const { id } = useParams();
   const { data: product,isLoading:loading } = useGetProductByIdQuery(id);
   
@@ -15,6 +15,7 @@ function Cart() {
   const cartItems = useSelector((state) => state.cart.cartItems);
 
   const productInCart = cartItems.find((item) => item.id == product?.id);
+  const roundPrice= Math.round(product?.price * 100) / 100; // Round to two decimal places
 
   const handleAddToCart = () => {
     if (!productInCart) {
@@ -57,8 +58,8 @@ function Cart() {
             <div className="flex justify-between items-center mb-6">
               <h4 className="text-green-600 text-2xl lg:text-3xl font-bold">
                 {loading? `...`:productInCart
-                  ? `${Number(product?.price * productInCart?.quantity)}$`
-                  : `${Number(product?.price)}$`}
+                  ? `${Number(roundPrice* productInCart?.quantity)}$`
+                  : `${Number(roundPrice)}$`}
                 {/* ternary oparator korchi bcz initally NaN dakaitache ..databse theke string hisbe ashe number ta */}
               </h4>
               {productInCart && (
@@ -96,7 +97,7 @@ function Cart() {
                 <span>+ Add to Cart</span>
               </button>
               <button
-                onClick={() => navigate(`/product/checkout`)}
+                onClick={() => navigate(`/product/cart`)}
                 className="w-full bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg flex justify-center items-center gap-3 transition"
               >
                      <BsCart3 />
@@ -148,4 +149,4 @@ function Cart() {
   );
 }
 
-export default Cart;
+export default SingleProductDetails;

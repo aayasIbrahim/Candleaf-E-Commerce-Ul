@@ -12,6 +12,8 @@
   "dependencies": {
     "@react-icons/all-files": "^4.1.0",
     "@reduxjs/toolkit": "^2.8.2",
+    "@stripe/react-stripe-js": "^3.9.0",
+    "@stripe/stripe-js": "^7.8.0",
     "@tailwindcss/vite": "^4.0.6",
     "firebase": "^12.0.0",
     "framer-motion": "^12.23.12",

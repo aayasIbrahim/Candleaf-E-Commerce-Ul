@@ -106,7 +106,7 @@ export default function Navbar() {
             <>
               <button
                 onClick={logout}
-                className="bg-green-600 hover:bg-red-600  text-white px-4 py-1.5 rounded transition-all duration-300 shadow-md hover:shadow-lg"
+                className="bg-green-600 hover:bg-red-600  text-white px-4 py-1.5 rounded transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer"
               >
                 Logout
               </button>
@@ -114,14 +114,14 @@ export default function Navbar() {
           ) : (
             <button
               onClick={() => navigate("login")}
-              className="bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white px-5 py-1.5 rounded shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300"
+              className="bg-gradient-to-r from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white px-5 py-1.5 rounded shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
             >
               Login
             </button>
           )}
 
           {/* Cart Button */}
-          <button className="relative">
+          <button onClick={()=>navigate("product/cart")} className="relative cursor-pointer">
             <BsCart3 size={25} color="black" />
             {totalQuantity > 0 && (
               <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold px-[6px] py-[1px] rounded-full">

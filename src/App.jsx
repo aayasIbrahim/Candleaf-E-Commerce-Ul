@@ -2,11 +2,12 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import Home from "./pages/Home.jsx";
 import "./App.css";
-import Cart from "./pages/Cart.jsx";
-import Checkout from "./pages/Checkout.jsx";
+import Cart from "./pages/CartList.jsx";
 import Admin from "./pages/Admin.jsx";
 import AuthForm from "./pages/AuthForm.jsx";
 import PrivteRoutes from "./routes/PrivteRoutes.jsx";
+import SingleProductDetails from "./pages/SingleProductDetails.jsx";
+import Checkout from "./pages/Checkout.jsx";
 
 const App = () => {
   return (
@@ -23,9 +24,13 @@ const App = () => {
             }
           />
           <Route path="login" element={<AuthForm />} />
-          <Route path="product/:id" element={<Cart />} />
-          <Route path="product/popular/:id" element={<Cart />} />
-          <Route path="product/checkout" element={<Checkout />} />
+          <Route path="product/:id" element={<SingleProductDetails />} />
+          <Route
+            path="product/popular/:id"
+            element={<SingleProductDetails />}
+          />
+          <Route path="product/cart" element={<Cart />} />
+          <Route path="checkout" element={<Checkout />} />
         </Route>
       </Routes>
     </HashRouter>
