@@ -25,7 +25,7 @@ function PopularProducts() {
           </p>
         </div>
 
-        <div className="my-[75px] md:mb-[120px] flex justify-center">
+        <div className="my-[75px] md:mb-[120px] flex justify-center m">
           <Swiper
             effect={"cards"}
             grabCursor={true}
@@ -35,7 +35,7 @@ function PopularProducts() {
               disableOnInteraction: false,
             }}
             speed={1500}
-            className="w-[350px] md:w-[400px] rounded-lg shadow-lg bg-white"
+            className="w-[350px] md:w-[400px] rounded-lg shadow-lg bg-white md:w-[320px]"
           >
             {popularproducts?.map((product) => (
               <SwiperSlide key={product.id}>

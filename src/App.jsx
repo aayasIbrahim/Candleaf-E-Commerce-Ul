@@ -3,11 +3,15 @@ import Layout from "./components/Layout.jsx";
 import Home from "./pages/Home.jsx";
 import "./App.css";
 import Cart from "./pages/CartList.jsx";
-import Admin from "./pages/Admin.jsx";
+// import Admin from "./pages/Admin.jsx";
 import AuthForm from "./pages/AuthForm.jsx";
-import PrivteRoutes from "./routes/PrivteRoutes.jsx";
+import PrivateRoutes from "./routes/PrivteRoutes.jsx"; // spelling fix
 import SingleProductDetails from "./pages/SingleProductDetails.jsx";
 import Checkout from "./pages/Checkout.jsx";
+import Contract from "./pages/Contract.jsx";
+import AdminLayout from "./components/AdminLayout.jsx";
+import ProductMangement from "./components/ProductMangement.jsx";
+import User from "./components/User.jsx";
 
 const App = () => {
   return (
@@ -15,14 +19,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route
-            path="admin"
-            element={
-              <PrivteRoutes>
-                <Admin />
-              </PrivteRoutes>
-            }
-          />
+          <Route path="contract" element={<Contract />} />
           <Route path="login" element={<AuthForm />} />
           <Route path="product/:id" element={<SingleProductDetails />} />
           <Route
@@ -31,6 +28,15 @@ const App = () => {
           />
           <Route path="product/cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />
+
+          {/* Protected admin routes */}
+          <Route element={<PrivateRoutes />}>
+            <Route path="admin" element={<AdminLayout />}>
+              <Route index element={<ProductMangement />} />
+              <Route path="user"element={<User />} />
+              {/* admin এর nested routes এ দিন */}
+            </Route>
+          </Route>
         </Route>
       </Routes>
     </HashRouter>

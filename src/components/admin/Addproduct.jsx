@@ -90,7 +90,7 @@ function Addproduct() {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 px-4 py-6">
+    <div className="max-w-lg mx-auto  px-4">
       <h2 className="text-2xl text-green-600 font-bold text-center mb-7 tracking-wide">
         Add New Product
       </h2>

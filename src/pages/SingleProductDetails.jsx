@@ -7,15 +7,15 @@ import { useNavigate } from "react-router-dom";
 import { useGetProductByIdQuery } from "../features/firebaseApi/firebaseApiSlice";
 function SingleProductDetails() {
   const { id } = useParams();
-  const { data: product,isLoading:loading } = useGetProductByIdQuery(id);
-  
+  const { data: product, isLoading: loading } = useGetProductByIdQuery(id);
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
 
   const productInCart = cartItems.find((item) => item.id == product?.id);
-  const roundPrice= Math.round(product?.price * 100) / 100; // Round to two decimal places
+  const roundPrice = Math.round(product?.price * 100) / 100; // Round to two decimal places
 
   const handleAddToCart = () => {
     if (!productInCart) {
@@ -42,9 +42,8 @@ function SingleProductDetails() {
         {/* Desktop Grid */}
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Product Image */}
-          
+
           <div className="flex-1 flex justify-center">
-          
             <img
               src={product?.img}
               alt={product?.title}
@@ -57,8 +56,10 @@ function SingleProductDetails() {
             {/* Price and Quantity */}
             <div className="flex justify-between items-center mb-6">
               <h4 className="text-green-600 text-2xl lg:text-3xl font-bold">
-                {loading? `...`:productInCart
-                  ? `${Number(roundPrice* productInCart?.quantity)}$`
+                {loading
+                  ? `...`
+                  : productInCart
+                  ? `${Number(roundPrice * productInCart?.quantity)}$`
                   : `${Number(roundPrice)}$`}
                 {/* ternary oparator korchi bcz initally NaN dakaitache ..databse theke string hisbe ashe number ta */}
               </h4>
@@ -96,13 +97,15 @@ function SingleProductDetails() {
                 <BsCart3 />
                 <span>+ Add to Cart</span>
               </button>
-              <button
-                onClick={() => navigate(`/product/cart`)}
-                className="w-full bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg flex justify-center items-center gap-3 transition"
-              >
-                     <BsCart3 />
-                <span>See Cart List</span>
-              </button>
+              {productInCart && (
+                <button
+                  onClick={() => navigate(`/product/cart`)}
+                  className="w-full bg-green-700 hover:bg-green-800 text-white text-lg py-3 rounded-lg flex justify-center items-center gap-3 transition"
+                >
+                  <BsCart3 />
+                  <span>See Cart List</span>
+                </button>
+              )}
             </div>
 
             {/* Product Features */}

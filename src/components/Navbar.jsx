@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -10,9 +9,8 @@ import logo from "../assets/logo.png";
 import { useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
 
-
 export default function Navbar() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   // Redux or store js থেকে cart items আনা
@@ -22,14 +20,12 @@ export default function Navbar() {
     (total, item) => total + item.quantity,
     0
   );
-  
 
   // Auth Context থেকে ডেটা আনা
-  const {  isAuthenticated, isAdmin,  logout } = useAuth();
-  
-//  if (loading) return null; // If loading, return null to avoid rendering
-//  if(isUser) return toast.success("Welcome User!");
+  const { isAuthenticated, isAdmin, logout } = useAuth();
 
+  //  if (loading) return null; // If loading, return null to avoid rendering
+  //  if(isUser) return toast.success("Welcome User!");
 
   return (
     <nav className="w-full px-4 md:px-[30px] py-4 shadow-sm text-white">
@@ -64,9 +60,9 @@ export default function Navbar() {
                 <a className="ms-6" href="#">
                   About
                 </a>
-                <a href="#" className="ms-6">
+                <Link to="contract" className="ms-6">
                   Contact us
-                </a>
+                </Link>
                 {isAdmin && (
                   <Link to="admin" className="ms-6">
                     Admin
@@ -90,7 +86,7 @@ export default function Navbar() {
               <HiMiniChevronDown />
             </a>
             <a href="#">About</a>
-            <a href="#">Contact us</a>
+            <Link to="contract">Contact us</Link>
             {isAdmin && <Link to="admin">Admin</Link>}
           </div>
         </div>
@@ -121,7 +117,10 @@ export default function Navbar() {
           )}
 
           {/* Cart Button */}
-          <button onClick={()=>navigate("product/cart")} className="relative cursor-pointer">
+          <button
+            onClick={() => navigate("product/cart")}
+            className="relative cursor-pointer"
+          >
             <BsCart3 size={25} color="black" />
             {totalQuantity > 0 && (
               <span className="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold px-[6px] py-[1px] rounded-full">
