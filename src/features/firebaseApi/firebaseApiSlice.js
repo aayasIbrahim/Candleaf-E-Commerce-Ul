@@ -15,7 +15,7 @@ import { db } from "../../firebase/firebase";
 export const firebaseApiSlice = createApi({
   reducerPath: "firebaseApi",
   baseQuery: fakeBaseQuery(),
-  tagTypes: ["products", "contracts"],
+  tagTypes: ["products", "contracts", "users"],
   endpoints: (builder) => ({
     addProduct: builder.mutation({
       async queryFn(product) {
@@ -133,6 +133,41 @@ export const firebaseApiSlice = createApi({
       },
       invalidatesTags: ["contracts"], // ✅ chhoto 'c'
     }),
+    getUser: builder.query({
+      async queryFn() {
+        try {
+          const userCollection = collection(db, "users");
+          const snapshot = await getDocs(userCollection);
+
+          // admin বাদ দিয়ে শুধু অন্য users নিলাম
+          const users = snapshot.docs
+            .map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }))
+            .filter((user) => user.role !== "admin");
+
+          return { data: users };
+        } catch (error) {
+          console.error("Error fetching users: ", error);
+          return { error: { message: "Failed to fetch users" } };
+        }
+      },
+      providesTags: ["users"],
+    }),
+    // user delete
+    deleteUser: builder.mutation({
+      async queryFn(id) {
+        try {
+          await deleteDoc(doc(db, "users", id));
+          return { data: "User deleted successfully" };
+        } catch (error) {
+          console.error("Error deleting user: ", error);
+          return { error: { message: "Failed to delete user" } };
+        }
+      },
+      invalidatesTags: ["users"],
+    }),
   }),
 });
 
@@ -144,5 +179,7 @@ export const {
   useUpdateProductMutation,
   useAddFormDataMutation,
   useGetFormDataQuery,
-  useDeleteFormdataMutation
+  useDeleteFormdataMutation,
+  useGetUserQuery,
+  useDeleteUserMutation,
 } = firebaseApiSlice;

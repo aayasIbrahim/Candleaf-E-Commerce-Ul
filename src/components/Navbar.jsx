@@ -57,9 +57,9 @@ export default function Navbar() {
                   <HiMiniChevronDown />
                   <span className="ms-1">Discovery</span>
                 </a>
-                <a className="ms-6" href="#">
+                <Link className="ms-6" to="checkout">
                   About
-                </a>
+                </Link>
                 <Link to="contract" className="ms-6">
                   Contact us
                 </Link>
@@ -85,7 +85,7 @@ export default function Navbar() {
               <span>Discovery</span>
               <HiMiniChevronDown />
             </a>
-            <a href="#">About</a>
+            <Link to="checkout">Payment</Link>
             <Link to="contract">Contact us</Link>
             {isAdmin && <Link to="admin">Admin</Link>}
           </div>

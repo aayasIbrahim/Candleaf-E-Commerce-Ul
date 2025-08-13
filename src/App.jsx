@@ -3,7 +3,6 @@ import Layout from "./components/Layout.jsx";
 import Home from "./pages/Home.jsx";
 import "./App.css";
 import Cart from "./pages/CartList.jsx";
-// import Admin from "./pages/Admin.jsx";
 import AuthForm from "./pages/AuthForm.jsx";
 import PrivateRoutes from "./routes/PrivteRoutes.jsx"; // spelling fix
 import SingleProductDetails from "./pages/SingleProductDetails.jsx";
@@ -11,8 +10,8 @@ import Checkout from "./pages/Checkout.jsx";
 import Contract from "./pages/Contract.jsx";
 import AdminLayout from "./components/AdminLayout.jsx";
 import ProductMangement from "./components/ProductMangement.jsx";
-import User from "./components/User.jsx";
 import GetContract from "./components/admin/Getcontract.jsx";
+import UsersList from "./components/admin/UsersList.jsx";
 
 const App = () => {
   return (
@@ -34,9 +33,8 @@ const App = () => {
           <Route element={<PrivateRoutes />}>
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<ProductMangement />} />
-              <Route path="user"element={<User />} />
+              <Route path="user" element={<UsersList />} />
               <Route path="contractt" element={<GetContract />} />
-              {/* admin এর nested routes এ দিন */}
             </Route>
           </Route>
         </Route>

@@ -18,7 +18,7 @@ export default function AdminLayout() {
   return (
     <div className="max-w-7xl mx-auto p-6">
       {/* Top Navigation */}
-      <div className="flex space-x-4 items-center mb-8">
+      <div className=" flex space-x-4 items-center mb-8">
         <button
           onClick={() => navigate("/admin")}
           className={getButtonClasses("/admin")}
