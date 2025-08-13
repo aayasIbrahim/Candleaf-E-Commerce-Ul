@@ -39,6 +39,7 @@ export default function AuthForm() {
           role: "user",
         });
         toast.success("Account created successfully!");
+        navigate("/");
       } else {
         const userCredential = await signInWithEmailAndPassword(
           auth,
@@ -50,16 +51,15 @@ export default function AuthForm() {
         if (docSnap.exists()) {
           const userData = docSnap.data();
           if (userData.role === "admin") {
-            toast.success("Welcome Admin!");
             navigate("/admin");
+            toast.success("Welcome Admin!");
 
             // Navigate to admin dashboard
           } else {
-            toast.success("Login success")
             navigate("/");
+            toast.success("Login success")
           }
         }
-        console.log("user");
       }
     } catch (err) {
       toast.error(err.message)
