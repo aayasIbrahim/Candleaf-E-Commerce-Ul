@@ -4,7 +4,7 @@ import Home from "./pages/Home.jsx";
 import "./App.css";
 import Cart from "./pages/CartList.jsx";
 import AuthForm from "./pages/AuthForm.jsx";
-import PrivateRoutes from "./routes/PrivteRoutes.jsx"; // spelling fix
+import PrivateRoutes from "./routes/PrivteRoutes.jsx"; 
 import SingleProductDetails from "./pages/SingleProductDetails.jsx";
 import Checkout from "./pages/Checkout.jsx";
 import Contract from "./pages/Contract.jsx";
@@ -12,10 +12,12 @@ import AdminLayout from "./components/AdminLayout.jsx";
 import ProductMangement from "./components/ProductMangement.jsx";
 import GetContract from "./components/admin/Getcontract.jsx";
 import UsersList from "./components/admin/UsersList.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 const App = () => {
   return (
     <HashRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />

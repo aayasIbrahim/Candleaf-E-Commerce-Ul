@@ -58,7 +58,7 @@ export default function Navbar() {
                   <span className="ms-1">Discovery</span>
                 </a>
                 <Link className="ms-6" to="checkout">
-                  About
+                  Payment
                 </Link>
                 <Link to="contract" className="ms-6">
                   Contact us
